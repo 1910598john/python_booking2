@@ -1,3 +1,5 @@
+#read line 68 first
+
 from tkinter import * #import tkinter GUI
 from time import strftime
 from tkinter import font
@@ -92,11 +94,11 @@ time = Label(main, font=('sans-serif', 15, font.BOLD), fg='#787A40', bg='#D4CBC3
 time.grid(column=0, row=0, ipadx=20, ipady=20) #grid geometry manager, 3 ina sya (grid, pack, place) https://www.pythontutorial.net/tkinter/tkinter-pack/
 
 #book button
-book_button = Button(main, text='BOOK', font=('sans-serif', 11, font.BOLD), fg='#C8AB65', bg='#787A40', borderwidth=0, width=10, height=2, command=create_book_window) #(container, text value, font(font-family, size, weight), text color, background color, command=function)
+book_button = Button(main, text='BOOK', font=('sans-serif', 11, font.BOLD), fg='#C8AB65', bg='#787A40', borderwidth=0, width=10, height=2, command=create_book_window) #(container, text value, font(font-family, size, weight), text color, background color, call create_book_window function)
 book_button.place(x=190, y=220) #place geometry manager, (x, y) specific coordinates
 
 #customers button
-customers_button = Button(main, text='CUSTOMERS', font=('sans-serif', 11, font.BOLD), fg='#C8AB65', bg='#787A40', borderwidth=0, width=15, height=2, command=create_customers_window) #(container, text value, font(font-family, size, weight), text color, background color, command=function)
+customers_button = Button(main, text='CUSTOMERS', font=('sans-serif', 11, font.BOLD), fg='#C8AB65', bg='#787A40', borderwidth=0, width=15, height=2, command=create_customers_window) #(container, text value, font(font-family, size, weight), text color, background color, call create_customers_window function)
 customers_button.place(x=300, y=220) #place geometry manager, (x, y) specific coordinates
 #call start timer
 start_timer()
