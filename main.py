@@ -5,7 +5,7 @@ from time import strftime
 from tkinter import font
 
 #Toplevel windows boolean variables
-#purpose sani boolean variables para pag gin click mo an 'book' or an 'customers' button san bisan pira ka beses, ka-usad lang sya ma create san window
+#purpose sani na boolean variables para pag gin click mo an 'book' or an 'customers' button san bisan pira ka beses, ka-usad lang sya ma create san window
 BOOK_WINDOW_CREATED = False 
 CUSTOMERS_WINDOW_CREATED = False
 
