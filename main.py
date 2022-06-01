@@ -1,4 +1,4 @@
-#read line 68 first
+
 
 from tkinter import * #import tkinter GUI
 from time import strftime
@@ -49,7 +49,7 @@ def create_customers_window():
             global CUSTOMERS_WINDOW_CREATED #make it a global variable
             CUSTOMERS_WINDOW_CREATED = False #set to false so we can create it again
             customers_window.destroy()
-        customers_window.protocol('WM_DELETE_WINDOW', close_customers_window) #amo lang ina sya aram ko na protocol 'WM_DELETE_WINDOW' meaning pag gin close mo sya ica-call nya an 'close_book_window' function
+        customers_window.protocol('WM_DELETE_WINDOW', close_customers_window) #amo lang ina sya aram ko na protocol 'WM_DELETE_WINDOW' meaning pag gin close mo sya ica-call nya an 'close_customers_window' function
         customers_window.title("Customers") #title san window
         customers_window.resizable(False, False) #disable resizing
         width = 700 #window's width
