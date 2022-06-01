@@ -33,7 +33,7 @@ def create_book_window():
         center_x = int(screen_width/2 - width/2)
         center_y = int(screen_height/2 - height/2)
         #tas i-seset naton sya
-        book_window.geometry(f'{width}x{height}+{center_x}+{center_y}') #set main window's height and width
+        book_window.geometry(f'{width}x{height}+{center_x}+{center_y}') #set book window's height and width
         book_window.configure(bg='#D4CBC3') #main window background color
         book_window.mainloop() #mainloop() need ini sya para ma display an window
 
@@ -61,7 +61,7 @@ def create_customers_window():
         center_x = int(screen_width/2 - width/2)
         center_y = int(screen_height/2 - height/2)
         #tas i-seset naton sya
-        customers_window.geometry(f'{width}x{height}+{center_x}+{center_y}') #set main window's height and width
+        customers_window.geometry(f'{width}x{height}+{center_x}+{center_y}') #customers window's height and width
         customers_window.configure(bg='#D4CBC3') #main window background color
         customers_window.mainloop() #mainloop() need ini sya para ma display an window
 
