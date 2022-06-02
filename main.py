@@ -29,7 +29,7 @@ def create_book_window():
         #screen dimension
         screen_width = book_window.winfo_screenwidth() #screen max width pixels
         screen_height = book_window.winfo_screenheight() #screen max height pixels
-        #kailangan ini sya para ma center an aton window 
+        #kailangan ini sya para ma center an aton windows 
         center_x = int(screen_width/2 - width/2)
         center_y = int(screen_height/2 - height/2)
         #tas i-seset naton sya
@@ -57,7 +57,7 @@ def create_customers_window():
         #screen dimension
         screen_width = customers_window.winfo_screenwidth() #screen max width pixels
         screen_height = customers_window.winfo_screenheight() #screen max height pixels
-        #kailangan ini sya para ma center an aton window 
+        #kailangan ini sya para ma center an aton windows 
         center_x = int(screen_width/2 - width/2)
         center_y = int(screen_height/2 - height/2)
         #tas i-seset naton sya
@@ -75,7 +75,7 @@ height = 450 #window's height
 screen_width = main.winfo_screenwidth() #screen max width pixels
 screen_height = main.winfo_screenheight() #screen max height pixels
 
-#kailangan ini sya para ma center an aton window 
+#kailangan ini sya para ma center an aton windows
 center_x = int(screen_width/2 - width/2)
 center_y = int(screen_height/2 - height/2)
 
