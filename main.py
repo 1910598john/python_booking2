@@ -1,6 +1,5 @@
-yawa
-
 from tkinter import * #import tkinter GUI
+import openpyxl 
 from time import strftime
 from tkinter import font
 from turtle import back
@@ -36,15 +35,53 @@ def create_book_window():
         #tas i-seset naton sya
         book_window.geometry(f'{width}x{height}+{center_x}+{center_y}') #set book window's height and width
         book_window.configure(bg='#FFFFFF') #main window background color
-
+        #variables
+        duration_price = 499 #per day price
+        firstname = StringVar()
+        lastname = StringVar()
+        address = StringVar()
+        contact = StringVar()
+        email = StringVar()
+        price = StringVar()
+        duration = StringVar()
+        #set values
+        price.set(str(duration_price))
+        duration.set("01")
+        #header text
         Label(book_window, text='Customer Data', font=('sans-serif', 25, font.BOLD), bg='#FFFFFF',fg='#787A40').place(x=170, y=30)
         #first name
-        Label(book_window, text='First name:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=0, sticky=E, pady=(120, 0), padx=(80, 0))
-        first_name_entry = Entry(book_window, width=15, highlightthickness=1, highlightbackground='#c0c4c1').grid(column=1, row=0, pady=(120, 0), padx=(0, 20))
+        Label(book_window, text='First name:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=0, sticky=E, pady=(115, 5), padx=(100, 0))
+        first_name_entry = Entry(book_window, width=15, highlightthickness=1, highlightbackground='#c0c4c1', textvariable=firstname).grid(column=1, row=0, pady=(115, 5), padx=(0, 20))
         #last name
-        Label(book_window, text='Last name:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=2, row=0, sticky=E, pady=(120, 0))
-        last_name_entry = Entry(book_window, width=15, highlightthickness=1, highlightbackground='#c0c4c1').grid(column=3, row=0, pady=(120, 0))
-        
+        Label(book_window, text='Last name:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=2, row=0, sticky=E, pady=(115, 5))
+        last_name_entry = Entry(book_window, width=15, highlightthickness=1, highlightbackground='#c0c4c1', textvariable=lastname).grid(column=3, row=0, pady=(115, 5))
+        #address 
+        Label(book_window, text='Address:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=1, sticky=E)
+        address_entry = Entry(book_window, width=35, highlightthickness=1, highlightbackground='#c0c4c1', textvariable=address).grid(column=1, row=1, columnspan=3, sticky=W, pady=(5))
+        #contact number
+        Label(book_window, text='Contact #:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=2, sticky=E)
+        contact_number_entry = Entry(book_window, width=35, highlightthickness=1, highlightbackground='#c0c4c1', textvariable=contact).grid(column=1, row=2, columnspan=3, sticky=W, pady=(5))
+        #email address
+        Label(book_window, text='Email:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=3, sticky=E)
+        email_address_entry = Entry(book_window, width=35, highlightthickness=1, highlightbackground='#c0c4c1', textvariable=email).grid(column=1, row=3, columnspan=3, sticky=W, pady=(5))
+        #payment and duration
+        Label(book_window, text='Duration and Payment', font=('sans-serif', 20, font.BOLD), bg='#FFFFFF',fg='#787A40').place(x=130, y=255)
+        #duration
+        Label(book_window, text='Duration:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=4, sticky=E, pady=(90, 5))
+        duration_entry = Entry(book_window, width=5, highlightthickness=1, highlightbackground='#c0c4c1', textvariable=duration)
+        duration_entry.grid(column=1, row=4, sticky=W, pady=(90, 5))
+        def test(e):
+            y = duration.get()
+            if len(y) == 2:
+                print('yes')
+        duration_entry.bind('<KeyPress>', test)
+        Label(book_window, text='day(s)', background='#FFFFFF', font=('sans-serif', 10)).grid(column=1, row=4, sticky=NS, pady=(90, 5))
+        #price
+        Label(book_window, text='Price:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=5, sticky=E, pady=(5))
+        Label(book_window, textvariable=price, background='#FFFFFF', font=('sans-serif', 10)).grid(column=1, row=5, sticky=W, pady=(5))
+        #submit button
+        submit_reservation = Button(book_window, text='BOOK', font=('sans-serif', 11, font.BOLD), fg='#C8AB65', bg='#787A40', borderwidth=0, width=35, height=1)
+        submit_reservation.place(x=120, y=420)
         book_window.mainloop() #mainloop() need ini sya para ma display an window
 
 #customers window
