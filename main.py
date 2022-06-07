@@ -1,4 +1,4 @@
-
+yawa
 
 from tkinter import * #import tkinter GUI
 from time import strftime
