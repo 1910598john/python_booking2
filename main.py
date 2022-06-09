@@ -1,5 +1,7 @@
+from operator import le
 from tkinter import * #import tkinter GUI
-import openpyxl 
+from openpyxl import Workbook, load_workbook #automate excel
+from openpyxl.styles.alignment import Alignment
 from time import strftime
 from tkinter import font
 from turtle import back
@@ -8,7 +10,10 @@ from turtle import back
 #purpose sani na boolean variables para pag gin click mo an 'book' or an 'customers' button san bisan pira ka beses, ka-usad lang sya ma create san window
 BOOK_WINDOW_CREATED = False 
 CUSTOMERS_WINDOW_CREATED = False
-
+#excel customers worksheet | workbook variable
+wb = load_workbook('customer_database.xlsx')
+#worksheet variable
+ws = wb.active
 #book window
 def create_book_window():
     global BOOK_WINDOW_CREATED #para maging global variable sya
@@ -35,8 +40,10 @@ def create_book_window():
         #tas i-seset naton sya
         book_window.geometry(f'{width}x{height}+{center_x}+{center_y}') #set book window's height and width
         book_window.configure(bg='#FFFFFF') #main window background color
+        
         #variables
-        duration_price = 499 #per day price
+        duration_price = 430 #per day price
+        expected_date = StringVar()
         firstname = StringVar()
         lastname = StringVar()
         address = StringVar()
@@ -45,8 +52,7 @@ def create_book_window():
         price = StringVar()
         duration = StringVar()
         #set values
-        price.set(str(duration_price))
-        duration.set("01")
+
         #header text
         Label(book_window, text='Customer Data', font=('sans-serif', 25, font.BOLD), bg='#FFFFFF',fg='#787A40').place(x=170, y=30)
         #first name
@@ -65,23 +71,65 @@ def create_book_window():
         Label(book_window, text='Email:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=3, sticky=E)
         email_address_entry = Entry(book_window, width=35, highlightthickness=1, highlightbackground='#c0c4c1', textvariable=email).grid(column=1, row=3, columnspan=3, sticky=W, pady=(5))
         #payment and duration
-        Label(book_window, text='Duration and Payment', font=('sans-serif', 20, font.BOLD), bg='#FFFFFF',fg='#787A40').place(x=130, y=255)
+        Label(book_window, text='Expected Date and Duration', font=('sans-serif', 20, font.BOLD), bg='#FFFFFF',fg='#787A40').place(x=110, y=255)
+        #format label
+        Label(book_window, text='Format: mm/dd/yy', background='#FFFFFF', font=('sans-serif', 9), fg='gray').place(x=170, y=305)
+        #expected date
+        Label(book_window, text='Expected date:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=4, sticky=E, pady=(90, 5))
+        date_entry = Entry(book_window, width=15, highlightthickness=1, highlightbackground='#c0c4c1', textvariable=expected_date)
+        date_entry.grid(column=1, row=4, sticky=W, pady=(90, 5), columnspan=3)
         #duration
-        Label(book_window, text='Duration:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=4, sticky=E, pady=(90, 5))
-        duration_entry = Entry(book_window, width=5, highlightthickness=1, highlightbackground='#c0c4c1', textvariable=duration)
-        duration_entry.grid(column=1, row=4, sticky=W, pady=(90, 5))
-        def test(e):
-            y = duration.get()
-            if len(y) == 2:
-                print('yes')
-        duration_entry.bind('<KeyPress>', test)
-        Label(book_window, text='day(s)', background='#FFFFFF', font=('sans-serif', 10)).grid(column=1, row=4, sticky=NS, pady=(90, 5))
+        Label(book_window, text='Duration:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=5, sticky=E, pady=(5))
+        duration_entry = Entry(book_window, width=4, highlightthickness=1, highlightbackground='#c0c4c1', textvariable=duration)
+        duration_entry.grid(column=1, row=5, sticky=W, pady=(5))
+        #set price
+        def setPrice(event):
+            _duration = duration.get()
+            if (_duration.isnumeric()):
+                price.set(duration_price * int(_duration))
+            if (len(_duration) is 0):
+                price.set("")
+        duration_entry.bind('<KeyRelease>', setPrice)
+        Label(book_window, text='day(s)', background='#FFFFFF', font=('sans-serif', 10)).grid(column=1, row=5, sticky=NS, pady=(5))
         #price
-        Label(book_window, text='Price:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=5, sticky=E, pady=(5))
-        Label(book_window, textvariable=price, background='#FFFFFF', font=('sans-serif', 10)).grid(column=1, row=5, sticky=W, pady=(5))
+        Label(book_window, text='Price:', background='#FFFFFF', font=('sans-serif', 10)).grid(column=0, row=6, sticky=E, pady=(5))
+        Label(book_window, textvariable=price, background='#FFFFFF', font=('sans-serif', 10)).grid(column=1, row=6, sticky=W, pady=(5))
+        #submit customer's data
+        def submit():
+            #get variables value
+            name = firstname.get() + " " + lastname.get()
+            _address = address.get()
+            _contact = contact.get()
+            _email = email.get()
+            _expected_date = expected_date.get()
+            _duration = duration.get() + " day(s)"
+            _amount_paid = price.get()
+            #verify if any of the entries has 0 length value
+            variables = [name, _address, _contact, _email, _expected_date, _duration, _amount_paid]
+            hasZeroValue = False
+            for x in variables:
+                if (len(x) == 0):
+                    hasZeroValue = True
+            if (hasZeroValue is False):
+                #slice or remove the first entered value if it starts with 0
+                if (_duration[:1] == '0' or 0):
+                    _duration = _duration[1:]
+                #append data in the worksheet
+                ws.append([name, _address, _contact, _email, _expected_date, _duration, _amount_paid])
+                #get excel max occupied row
+                max_row = ws.max_row
+                #style occupied cells
+                for x in range(1, (max_row + 1)):
+                    for y in range(1, 8):
+                        ws.cell(row=x, column=y).alignment = Alignment(horizontal='center', vertical='center') #horizontally and vertically center cells
+                #save worksheet
+                wb.save('customer_database.xlsx')
+            else:
+                print('Please fill out the entries')
+
         #submit button
-        submit_reservation = Button(book_window, text='BOOK', font=('sans-serif', 11, font.BOLD), fg='#C8AB65', bg='#787A40', borderwidth=0, width=35, height=1)
-        submit_reservation.place(x=120, y=420)
+        submit_reservation = Button(book_window, text='BOOK', font=('sans-serif', 11, font.BOLD), fg='#C8AB65', bg='#787A40', borderwidth=0, width=35, height=1, command=submit)
+        submit_reservation.place(x=120, y=440)
         book_window.mainloop() #mainloop() need ini sya para ma display an window
 
 #customers window
