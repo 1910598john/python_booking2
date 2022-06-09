@@ -1,4 +1,4 @@
-test = {'name':'jm', 'age':22}
+test = [1,2,3,4,5]
 
 for x in test:
-    print(test[x])
+    print(x % 2)

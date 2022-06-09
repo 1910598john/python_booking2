@@ -1,5 +1,3 @@
-from email import header
-from operator import le
 from tkinter import * #import tkinter GUI
 from openpyxl import Workbook, load_workbook #automate excel
 from openpyxl.styles.alignment import Alignment
@@ -165,7 +163,7 @@ def create_book_window():
                 create_pop_up_window(title, msg, txtcolor)
             else: #error pop-up window message
                 title = 'There seems to be a problem'
-                msg = 'Please fill out the entry fields.'
+                msg = 'Please fill out the entries.'
                 txtcolor = 'red'
                 create_pop_up_window(title, msg, txtcolor)
 
@@ -199,7 +197,7 @@ def create_customers_window():
         center_y = int(screen_height/2 - height/2)
         #tas i-seset naton sya
         customers_window.geometry(f'{width}x{height}+{center_x}+{center_y}') #customers window's height and width
-        customers_window.configure(bg='#FFFFFF') #main window background color
+        customers_window.configure(bg='#FFFFFF')
         #window's body 
         #make the table scrollable
         lframe = LabelFrame(customers_window)
@@ -226,31 +224,36 @@ def create_customers_window():
         #sort data
         def sortbydate(e):
             return e['expected_date']
-
         customersData_list.sort(reverse=True,key=sortbydate)
         _row = 0
+        
         for c in customersData_list:
+            bg = '#ffffff'
+            fg = '#000'
+            if not(_row % 2 == 1):
+                bg = '#f0f0ed'
             customer_data = []
             for v in c:
                 customer_data.append(c[v])
             if len(customer_data[0]) > 15:
                 name = customer_data[0]
                 _slicedName = name[0:11] + ".."
-                Label(frame, text=_slicedName, width=15).grid(column=0, row=_row, ipady=2)
+                Label(frame, text=_slicedName, width=15, bg=bg, fg=fg).grid(column=0, row=_row, ipady=2)
             else:
-                Label(frame, text=customer_data[0], width=15).grid(column=0, row=_row, ipady=2)
-            Label(frame, text=customer_data[1], width=15).grid(column=1, row=_row, ipady=2)
-            Label(frame, text=customer_data[2], width=15).grid(column=2, row=_row, ipady=2)
+                Label(frame, text=customer_data[0], width=15, bg=bg, fg=fg).grid(column=0, row=_row, ipady=2)
+            Label(frame, text=customer_data[1], width=15, bg=bg, fg=fg).grid(column=1, row=_row, ipady=2)
+            Label(frame, text=customer_data[2], width=15, bg=bg, fg=fg).grid(column=2, row=_row, ipady=2)
             if len(customer_data[3]) > 15:
                 email = customer_data[3]
                 _sliced_email = email[0:15] + ".."
-                Label(frame, text=_sliced_email, width=23).grid(column=3, row=_row, ipady=2)
+                Label(frame, text=_sliced_email, width=23, bg=bg, fg=fg).grid(column=3, row=_row, ipady=2)
             else:
-                Label(frame, text=customer_data[3], width=23).grid(column=3, row=_row, ipady=2)
-            Label(frame, text=customer_data[4], width=10).grid(column=4, row=_row, ipady=2)
-            Label(frame, text=customer_data[5], width=10).grid(column=5, row=_row, ipady=2, ipadx=(5))
-            Label(frame, text=customer_data[6], width=10).grid(column=6, row=_row, ipady=2)
+                Label(frame, text=customer_data[3], width=23, bg=bg, fg=fg).grid(column=3, row=_row, ipady=2)
+            Label(frame, text=customer_data[4], width=10, bg=bg, fg=fg).grid(column=4, row=_row, ipady=2)
+            Label(frame, text=customer_data[5], width=10, bg=bg, fg=fg).grid(column=5, row=_row, ipady=2, ipadx=(5))
+            Label(frame, text=customer_data[6], width=10, bg=bg, fg=fg).grid(column=6, row=_row, ipady=2)
             _row += 1
+            
         
         #headers
         headers = ['Customer Name', 'Address', 'Contact #', 'Email Address', 'Expected Date', 'Duration', 'Amount Paid']
