@@ -1,3 +1,4 @@
+from email import header
 from operator import le
 from tkinter import * #import tkinter GUI
 from openpyxl import Workbook, load_workbook #automate excel
@@ -10,10 +11,39 @@ from turtle import back
 #purpose sani na boolean variables para pag gin click mo an 'book' or an 'customers' button san bisan pira ka beses, ka-usad lang sya ma create san window
 BOOK_WINDOW_CREATED = False 
 CUSTOMERS_WINDOW_CREATED = False
+POP_UP_WINDOW_CREATED = False
+
 #excel customers worksheet | workbook variable
 wb = load_workbook('customer_database.xlsx')
 #worksheet variable
 ws = wb.active
+def create_pop_up_window(title, text, textcolor):
+    global POP_UP_WINDOW_CREATED
+    if POP_UP_WINDOW_CREATED is not True:
+        POP_UP_WINDOW_CREATED = True
+        pop_up_window = Toplevel()
+        #pop-up window closing function
+        def close_pop_up_window():
+            global POP_UP_WINDOW_CREATED #make it a global variable
+            POP_UP_WINDOW_CREATED = False #set to false so the window can be created again
+            pop_up_window.destroy()
+        pop_up_window.protocol('WM_DELETE_WINDOW', close_pop_up_window) #amo lang ina sya aram ko na protocol 'WM_DELETE_WINDOW' meaning pag gin close mo sya ica-call nya an 'close_book_window' function
+        pop_up_window.title(title) #title san window
+        pop_up_window.resizable(False, False) #disable resizing
+        width = 285 #window's width
+        height = 70 #window's height
+        #screen dimension
+        screen_width = pop_up_window.winfo_screenwidth() #screen max width pixels
+        screen_height = pop_up_window.winfo_screenheight() #screen max height pixels
+        #kailangan ini sya para ma center an aton windows 
+        center_x = int(screen_width/2 - width/2)
+        center_y = int(screen_height/2 - height/2)
+        #tas i-seset naton sya
+        pop_up_window.geometry(f'{width}x{height}+{center_x}+{center_y}') #set book window's height and width
+        pop_up_window.configure(bg='#FFFFFF')
+
+        Label(pop_up_window, text=text, font=('sans-serif', 11, font.BOLD), fg=textcolor).pack(fill=BOTH, expand=TRUE)
+        pop_up_window.mainloop()
 #book window
 def create_book_window():
     global BOOK_WINDOW_CREATED #para maging global variable sya
@@ -24,7 +54,7 @@ def create_book_window():
         #book window closing function
         def close_book_window():
             global BOOK_WINDOW_CREATED #make it a global variable
-            BOOK_WINDOW_CREATED = False #set to false so we can create it again
+            BOOK_WINDOW_CREATED = False #set to false so the window can be created again
             book_window.destroy()
         book_window.protocol('WM_DELETE_WINDOW', close_book_window) #amo lang ina sya aram ko na protocol 'WM_DELETE_WINDOW' meaning pag gin close mo sya ica-call nya an 'close_book_window' function
         book_window.title("Book") #title san window
@@ -97,8 +127,8 @@ def create_book_window():
         #submit customer's data
         def submit():
             #get variables value
-            name = firstname.get() + " " + lastname.get()
-            _address = address.get()
+            name = firstname.get().upper() + " " + lastname.get().upper()
+            _address = address.get().upper()
             _contact = contact.get()
             _email = email.get()
             _expected_date = expected_date.get()
@@ -111,6 +141,7 @@ def create_book_window():
                 if (len(x) == 0):
                     hasZeroValue = True
             if (hasZeroValue is False):
+                global BOOK_WINDOW_CREATED
                 #slice or remove the first entered value if it starts with 0
                 if (_duration[:1] == '0' or 0):
                     _duration = _duration[1:]
@@ -124,8 +155,19 @@ def create_book_window():
                         ws.cell(row=x, column=y).alignment = Alignment(horizontal='center', vertical='center') #horizontally and vertically center cells
                 #save worksheet
                 wb.save('customer_database.xlsx')
-            else:
-                print('Please fill out the entries')
+                #close book window
+                BOOK_WINDOW_CREATED = False
+                book_window.destroy()
+                #success submitting data
+                title = 'Success'
+                msg = 'Book success.'
+                txtcolor = '#787A40'
+                create_pop_up_window(title, msg, txtcolor)
+            else: #error pop-up window message
+                title = 'There seems to be a problem'
+                msg = 'Please fill out the entry fields.'
+                txtcolor = 'red'
+                create_pop_up_window(title, msg, txtcolor)
 
         #submit button
         submit_reservation = Button(book_window, text='BOOK', font=('sans-serif', 11, font.BOLD), fg='#C8AB65', bg='#787A40', borderwidth=0, width=35, height=1, command=submit)
@@ -142,12 +184,12 @@ def create_customers_window():
         #book window closing function
         def close_customers_window():
             global CUSTOMERS_WINDOW_CREATED #make it a global variable
-            CUSTOMERS_WINDOW_CREATED = False #set to false so we can create it again
+            CUSTOMERS_WINDOW_CREATED = False #set to false so the window can be created again
             customers_window.destroy()
         customers_window.protocol('WM_DELETE_WINDOW', close_customers_window) #amo lang ina sya aram ko na protocol 'WM_DELETE_WINDOW' meaning pag gin close mo sya ica-call nya an 'close_customers_window' function
         customers_window.title("Customers") #title san window
         customers_window.resizable(False, False) #disable resizing
-        width = 700 #window's width
+        width = 750 #window's width
         height = 450 #window's height
         #screen dimension
         screen_width = customers_window.winfo_screenwidth() #screen max width pixels
@@ -158,6 +200,69 @@ def create_customers_window():
         #tas i-seset naton sya
         customers_window.geometry(f'{width}x{height}+{center_x}+{center_y}') #customers window's height and width
         customers_window.configure(bg='#FFFFFF') #main window background color
+        #window's body 
+        #make the table scrollable
+        lframe = LabelFrame(customers_window)
+        canvas = Canvas(lframe, width=750, height=450)
+        frame = Frame(canvas)
+        scrollbar = Scrollbar(lframe, orient=VERTICAL, command=canvas.yview)
+        scrollbar.place(x=730, y=30, height=430)
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.bind('<Configure>', lambda e : canvas.configure(scrollregion=canvas.bbox('all')))
+        canvas.create_window((0,0), window=frame, anchor=NW)
+        #
+        maxRow = ws.max_row + 1
+        customersData_list = []
+        for r in range(2, maxRow):
+            customer = {}
+            customer['name'] = ws.cell(row=r, column=1).value
+            customer['address'] = ws.cell(row=r, column=2).value
+            customer['contact'] = ws.cell(row=r, column=3).value
+            customer['email'] = ws.cell(row=r, column=4).value
+            customer['expected_date'] = ws.cell(row=r, column=5).value
+            customer['duration'] = ws.cell(row=r, column=6).value
+            customer['amount_paid'] = ws.cell(row=r, column=7).value
+            customersData_list.append(customer)
+        #sort data
+        def sortbydate(e):
+            return e['expected_date']
+
+        customersData_list.sort(reverse=True,key=sortbydate)
+        _row = 0
+        for c in customersData_list:
+            customer_data = []
+            for v in c:
+                customer_data.append(c[v])
+            if len(customer_data[0]) > 15:
+                name = customer_data[0]
+                _slicedName = name[0:11] + ".."
+                Label(frame, text=_slicedName, width=15).grid(column=0, row=_row, ipady=2)
+            else:
+                Label(frame, text=customer_data[0], width=15).grid(column=0, row=_row, ipady=2)
+            Label(frame, text=customer_data[1], width=15).grid(column=1, row=_row, ipady=2)
+            Label(frame, text=customer_data[2], width=15).grid(column=2, row=_row, ipady=2)
+            if len(customer_data[3]) > 15:
+                email = customer_data[3]
+                _sliced_email = email[0:15] + ".."
+                Label(frame, text=_sliced_email, width=23).grid(column=3, row=_row, ipady=2)
+            else:
+                Label(frame, text=customer_data[3], width=23).grid(column=3, row=_row, ipady=2)
+            Label(frame, text=customer_data[4], width=10).grid(column=4, row=_row, ipady=2)
+            Label(frame, text=customer_data[5], width=10).grid(column=5, row=_row, ipady=2, ipadx=(5))
+            Label(frame, text=customer_data[6], width=10).grid(column=6, row=_row, ipady=2)
+            _row += 1
+        
+        #headers
+        headers = ['Customer Name', 'Address', 'Contact #', 'Email Address', 'Expected Date', 'Duration', 'Amount Paid']
+        Label(customers_window, text=headers[0], fg='#C8AB65', bg='#787A40', width=15, height=2).place(x=0, y=0)
+        Label(customers_window, text=headers[1], fg='#C8AB65', bg='#787A40', width=17, height=2).place(x=110, y=0)
+        Label(customers_window, text=headers[2], fg='#C8AB65', bg='#787A40', width=15, height=2).place(x=230, y=0)
+        Label(customers_window, text=headers[3], fg='#C8AB65', bg='#787A40', width=23, height=2).place(x=330, y=0)
+        Label(customers_window, text=headers[4], fg='#C8AB65', bg='#787A40', width=12, height=2).place(x=496, y=0)
+        Label(customers_window, text=headers[5], fg='#C8AB65', bg='#787A40', width=12, height=2).place(x=580, y=0)
+        Label(customers_window, text=headers[6], fg='#C8AB65', bg='#787A40', width=13, height=2).place(x=660, y=0)
+        canvas.grid(column=0, row=0, pady=(40, 5))
+        lframe.pack()
         customers_window.mainloop() #mainloop() need ini sya para ma display an window
 
 #create main window

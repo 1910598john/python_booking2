@@ -1,3 +1,4 @@
-test = '123s'
+test = {'name':'jm', 'age':22}
 
-print(test.isnumeric())
+for x in test:
+    print(test[x])
