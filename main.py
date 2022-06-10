@@ -225,11 +225,11 @@ def create_customers_window():
             customer = {} #create empty dictionary variable
             customer['name'] = ws.cell(row=r, column=1).value #add name key and cell value fetched from excel
             customer['address'] = ws.cell(row=r, column=2).value #add address key and cell value fetched from excel
-            customer['contact'] = ws.cell(row=r, column=3).value #add name key and cell value fetched from excel
-            customer['email'] = ws.cell(row=r, column=4).value #add name key and cell value fetched from excel
-            customer['expected_date'] = ws.cell(row=r, column=5).value #add name key and cell value fetched from excel
-            customer['duration'] = ws.cell(row=r, column=6).value #add name key and cell value fetched from excel
-            customer['amount_paid'] = ws.cell(row=r, column=7).value #add name key and cell value fetched from excel
+            customer['contact'] = ws.cell(row=r, column=3).value #add contact key and cell value fetched from excel
+            customer['email'] = ws.cell(row=r, column=4).value #add name email and cell value fetched from excel
+            customer['expected_date'] = ws.cell(row=r, column=5).value #add expected date key and cell value fetched from excel
+            customer['duration'] = ws.cell(row=r, column=6).value #add duration key and cell value fetched from excel
+            customer['amount_paid'] = ws.cell(row=r, column=7).value #add amount paid key and cell value fetched from excel
             #append created customer list
             customersData_list.append(customer)
         #sort by date
